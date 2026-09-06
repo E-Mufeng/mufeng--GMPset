@@ -1704,6 +1704,25 @@ function accessKeyOK(req) {
   return h === ACCESS_TOKEN;
 }
 
+// SSRF 边界守卫：助手后端只允许本机/内网地址，禁止公网、0.0.0.0、云元数据(169.254.x)
+function ssrfSafeTarget(rawUrl) {
+  let u;
+  try { u = new URL(rawUrl); } catch (e) { return null; }
+  if (u.protocol !== 'http:' && u.protocol !== 'https:') return null;
+  const host = (u.hostname || '').toLowerCase();
+  if (host === 'localhost' || host === '127.0.0.1' || host === '::1' || host === '[::1]' || host === '0.0.0.1') return u.href;
+  const m = host.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
+  if (m) {
+    const a = +m[1], b = +m[2];
+    if (a === 10) return u.href;                                   // 10.0.0.0/8
+    if (a === 172 && b >= 16 && b <= 31) return u.href;            // 172.16.0.0/12
+    if (a === 192 && b === 168) return u.href;                    // 192.168.0.0/16
+    if (a === 127) return u.href;                                  // 127.0.0.0/8
+    return null;                                                   // 公网 / 0.0.0.0 / 169.254.x 元数据 → 拒绝
+  }
+  return null;                                                     // 非 IP 主机名（防 DNS rebinding）一律拒绝
+}
+
 const FUSE_ROUTES_DIR = path.join(__dirname, 'services', '_routes');
 const toolApp = express();
 toolApp.use(express.json({ limit: '200mb' }));
@@ -2260,7 +2279,9 @@ const server = http.createServer(async (req, res) => {
       try { body = JSON.parse(await readBody(req)); } catch (e) { send(res, 400, { ok: false, reason: '请求体解析失败' }); return; }
       const cfg = CONFIG.assistant || {};
       const provider = body.provider || cfg.provider || 'ollama';
-      const baseUrl = (body.baseUrl || cfg.baseUrl || 'http://127.0.0.1:11434').replace(/\/+$/, '');
+      const rawBase = (body.baseUrl || cfg.baseUrl || 'http://127.0.0.1:11434').replace(/\/+$/, '');
+      const baseUrl = ssrfSafeTarget(rawBase);
+      if (!baseUrl) { send(res, 400, { ok: false, reason: '助手后端地址不合法或超出允许范围（仅限本机/内网地址）' }); return; }
       const model = body.model || cfg.model || 'default';
       let messages = Array.isArray(body.messages) ? body.messages : [];
       if (!messages.length && body.prompt) messages.push({ role: 'user', content: body.prompt });

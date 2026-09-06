@@ -3,7 +3,7 @@
   "port": 8768,
   "host": "127.0.0.1",
   "accessToken": "",
-  "version": "0.8.6",
+  "version": "0.8.7",
   "assistant": {
     "provider": "ollama",
     "baseUrl": "http://127.0.0.1:11434",
