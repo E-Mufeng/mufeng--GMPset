@@ -1,0 +1,356 @@
+#page-music{
+  --text:#e8e8ea; --text2:#b8b8be; --text3:#8a8a92; --text4:#6a6a72;
+  --bg:#1e1e22; --bg2:#26262b; --bg3:#32323a;
+  --border:#3a3a42; --primary:#4c8bf5; --primary2:#6aa0ff;
+  --danger:#e5484d; --ok:#3fb950; --warn:#e3a008;
+  --accent:#4c8bf5; --accent-dim:rgba(76,139,245,.16);
+  --hover:rgba(255,255,255,.06); --radius:8px; --bar-h:64px; --sidebar-w:240px;
+  --shadow:0 4px 16px rgba(0,0,0,.4);
+}
+
+/* 全局隐藏工具类（工具箱原 .hidden 实用类；聚创台未定义，这里补上以正确收起播放器/歌词等） */
+.hidden{display:none !important}
+
+.page-writing{overflow:hidden!important}
+
+/* Plugin pages: iframe fills available space */
+.plugin-frame-page{padding:0!important;overflow:hidden!important}
+
+.btn-icon{background:none;border:none;cursor:pointer;font-size:14px;padding:4px 6px;border-radius:4px;color:var(--text2);line-height:1;transition:all .12s}
+
+.btn-icon:hover{background:var(--hover);color:var(--text)}
+
+.modal-overlay.hidden{display:none}
+
+/* Music */
+.music-page{height:100%;display:flex;flex-direction:column;overflow:hidden;position:relative}
+
+.music-tabs{display:flex;flex-shrink:0;border-bottom:1px solid var(--border);padding:0 24px}
+
+.music-tab{padding:8px 16px;font-size:12px;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;user-select:none}
+
+.music-tab:hover{color:var(--text)}
+
+.music-tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+.music-tab-content{display:none;flex:1;overflow-y:auto;flex-direction:column;padding:12px 24px 16px}
+
+.music-tab-content.active{display:flex}
+
+/* Search */
+.search-bar{display:flex;gap:6px;margin-bottom:10px;flex-shrink:0}
+
+.search-bar input{flex:1}
+
+.search-count{font-size:11px;color:var(--text3);margin-bottom:6px;flex-shrink:0}
+
+.loading{text-align:center;padding:40px;color:var(--text3);font-size:13px}
+
+/* Song list */
+.song-list{flex:1;overflow-y:auto;min-height:0}
+
+.song-item{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;cursor:default}
+
+.song-item:hover{background:var(--hover)}
+
+.song-item.active{background:var(--accent-dim)}
+
+.song-cover{width:36px;height:36px;border-radius:4px;object-fit:cover;flex-shrink:0;background:var(--bg3)}
+
+.song-info{flex:1;min-width:0}
+
+.song-title{font-size:12px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.song-artist{font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.song-badge{font-size:10px;padding:1px 5px;border-radius:3px;font-weight:500;flex-shrink:0}
+
+.song-badge.ny{background:rgba(212,49,49,.15);color:#d43131}
+
+.song-badge.qq{background:rgba(7,179,105,.15);color:#07b369}
+
+.song-badge.kg{background:rgba(255,119,0,.15);color:#ff7700}
+
+.song-badge.kw{background:rgba(255,68,170,.15);color:#f4a}
+
+.song-badge.bd{background:rgba(60,120,255,.15);color:#3c78ff}
+
+.song-badge.lc{background:rgba(108,92,231,.15);color:#6c5ce7}
+
+.song-dur{font-size:10px;color:var(--text3);min-width:32px;text-align:right}
+
+.song-acts{display:flex;gap:2px;flex-shrink:0}
+
+/* Player bar */
+.player-bar{position:fixed;bottom:0;left:var(--sidebar-w);right:0;height:var(--bar-h);background:var(--bg2);border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;padding:0 12px;z-index:100}
+
+.player-cover{width:48px;height:48px;border-radius:6px;object-fit:cover;flex-shrink:0;background:var(--bg3)}
+
+.player-info{width:150px;flex-shrink:0;min-width:0}
+
+.player-title{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.player-artist{font-size:10px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+.player-ctrls{display:flex;align-items:center;gap:6px;flex:1;max-width:460px}
+
+.player-ctrls .tm{font-size:10px;color:var(--text3);min-width:30px;text-align:center;font-variant-numeric:tabular-nums}
+
+.slider{-webkit-appearance:none;appearance:none;height:3px;background:var(--border);border-radius:2px;outline:none;cursor:pointer;flex:1;min-width:0}
+
+.slider::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;border-radius:50%;background:var(--accent);cursor:pointer;opacity:0;transition:opacity .12s}
+
+.slider:hover::-webkit-slider-thumb{opacity:1}
+
+.vol-wrap{display:flex;align-items:center;gap:6px;width:130px;flex-shrink:0}
+
+.vol-wrap .vol-btn{background:none;border:none;color:var(--text2);cursor:pointer;font-size:16px;padding:2px;width:24px;text-align:center}
+
+.vol-wrap .vol-btn:hover{color:var(--text)}
+
+.vol-wrap .slider{max-width:90px}
+
+/* Lyrics inline */
+.lyric-wrap{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px;margin-top:10px;text-align:center;max-height:250px;overflow-y:auto;flex-shrink:0}
+
+.lyric-wrap.hidden{display:none}
+
+/* Playlist */
+#pl-content{display:grid;grid-template-columns:200px 1fr;gap:10px;flex:1;min-height:0}
+
+#pl-list{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px;overflow-y:auto}
+
+#pl-list .panel-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+
+#pl-list .panel-hdr h3{font-size:12px;font-weight:600}
+
+.pl-item{padding:6px 8px;border-radius:5px;cursor:pointer;margin-bottom:2px;display:flex;justify-content:space-between}
+
+.pl-item:hover{background:var(--hover)}
+
+.pl-item.active{background:var(--accent-dim)}
+
+.pl-item .pln{font-size:12px}
+
+.pl-item .plc{font-size:10px;color:var(--text3)}
+
+#pl-songs{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:10px;overflow-y:auto}
+
+.search-actions{display:flex;gap:6px;margin-bottom:8px;flex-shrink:0;padding:2px 0}
+
+.search-actions.hidden{display:none}
+
+.pl-menu-item{padding:6px 10px;cursor:pointer;border-radius:4px;font-size:13px}
+
+.pl-menu-item:hover{background:var(--hover)}
+
+.mode-btn{opacity:.4;transition:opacity .12s}
+
+.pl-actions{display:inline-flex;align-items:center;gap:2px;opacity:0;transition:opacity .12s;margin-left:4px}
+
+.pl-item:hover .pl-actions{opacity:1}
+
+.pl-actions .btn-icon{padding:1px 2px;font-size:10px;line-height:1}
+
+/* Selection bar */
+#sel-bar{position:sticky;bottom:0;background:var(--bg2);border-top:1px solid var(--border);padding:8px 12px;display:flex;align-items:center;gap:8px;z-index:10;margin-top:auto;justify-content:center}
+
+#sel-bar.hidden{display:none}
+
+.sel-bar{border-top:1px solid var(--border)}
+
+/* Checkbox */
+.song-chk{display:inline-flex;align-items:center;justify-content:center;width:18px;flex-shrink:0;cursor:pointer;font-size:13px;color:var(--text3);user-select:none}
+
+.song-chk.checked{color:var(--accent)}
+
+/* Playlist search */
+.pl-search-box{display:flex;gap:6px;padding:8px 0;border-top:1px solid var(--border);margin-top:auto;position:sticky;bottom:0;background:var(--bg2);z-index:2}
+
+.pl-search-box input{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:5px;padding:5px 8px;color:var(--text);font-size:12px;outline:none}
+
+.pl-search-box input:focus{border-color:var(--accent)}
+
+.pl-sr-hdr{font-size:11px;color:var(--text3);padding:6px 2px}
+
+.pl-sr-item .pl-sr-add{padding:2px 6px}
+
+#pl-songs{display:flex;flex-direction:column;flex:1;overflow-y:auto;padding:0 12px 8px;min-height:0}
+
+#pl-content{display:flex;flex:1;min-height:0;overflow:hidden}
+
+/* Discover page */
+.discover-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:6px 0;overflow-y:auto;flex:1;align-content:start}
+
+.discover-card{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:12px}
+
+.discover-card h3{font-size:13px;font-weight:600;margin-bottom:8px}
+
+.discover-tags{display:flex;flex-wrap:wrap;gap:5px}
+
+.discover-tag{padding:4px 10px;background:var(--bg);border:1px solid var(--border);border-radius:14px;font-size:11px;cursor:pointer;transition:all .12s}
+
+.discover-tag:hover{background:var(--accent-dim);border-color:var(--accent);color:var(--accent)}
+
+.discover-stats{display:flex;gap:16px}
+
+.discover-stat{display:flex;flex-direction:column;align-items:center;min-width:60px}
+
+.discover-stat .ds-n{font-size:22px;font-weight:700;color:var(--accent)}
+
+.discover-stat .ds-l{font-size:10px;color:var(--text3);margin-top:2px}
+
+.pl-actions{display:inline-flex;align-items:center;gap:2px;opacity:0;transition:opacity .12s;margin-left:4px}
+
+.pl-item:hover .pl-actions{opacity:1}
+
+.pl-actions .btn-icon{padding:1px 2px;font-size:10px;line-height:1}
+
+.empty-state{text-align:center;padding:50px 20px;color:var(--text3)}
+
+.pbar{height:3px;background:var(--border);border-radius:2px;overflow:hidden;margin:6px 0}
+
+/* Queue drag */
+.q-drag{cursor:grab;color:var(--text3);padding:0 4px;font-size:12px;user-select:none;flex-shrink:0}
+
+.song-item.dragging{opacity:.4}
+
+.song-item.drag-over{border-top:2px solid var(--accent)}
+
+.chart-bar-wrap{flex:1;height:16px;background:var(--bg);border-radius:3px;overflow:hidden}
+
+.cat-bar-wrap{flex:1;height:12px;background:var(--bg);border-radius:3px;overflow:hidden}
+
+.session-block{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden}
+
+.session-cats{flex:1;display:flex;gap:4px;overflow:hidden}
+
+.span-task{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text)}
+
+.model-bar-wrap{flex:1;height:14px;background:var(--bg);border-radius:3px;overflow:hidden}
+
+.task-desc{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.task-desc{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--text2)}
+
+.tool-bar{height:6px;background:var(--bg3);border-radius:3px;overflow:hidden}
+
+.wr-chapter-sidebar{width:200px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;flex:0 0 200px;transition:width .2s,flex .2s;overflow:hidden;min-height:0}
+
+.wr-chapter-sidebar.collapsed{width:0!important;min-width:0!important;flex:0 0 0!important;overflow:hidden!important;padding:0!important;border:none!important}
+
+.wr-ai-panel[data-collapsed="true"]{overflow:hidden!important}
+
+.wr-tpl-btn{transition:all .1s}
+
+.wr-tpl-btn:hover{background:var(--hover);border-color:var(--accent)}
+
+.wr-outline-tpl-btn{transition:all .1s}
+
+.wr-ch-card-title{font-size:12px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.wr-ch-card-summary{font-size:9px;color:var(--text4);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+.wr-outline-tpl-btn:hover{background:var(--hover);border-color:var(--accent)}
+
+/* ===== Project Editor (React) ===== */
+.project-editor {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+.project-editor > .tab-content {
+  flex: 1;
+  overflow: auto;
+  padding: 12px;
+}
+
+.world-tab .sidebar .tabs {
+  display: flex;
+  gap: 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+
+.world-tab .editor .empty-state {
+  text-align: center;
+  color: var(--text3);
+  margin-top: 60px;
+  line-height: 1.8;
+  font-size: 14px;
+}
+
+.loading {
+  color: var(--text3);
+  padding: 20px;
+  text-align: center;
+}
+
+/* Download progress */ 
+.dl-progress { height: 6px; background: var(--bg3); border-radius: 3px; overflow: hidden; margin: 4px 0; }
+
+/* ===== Writing Dashboard v3 - Visual Polish ===== */
+
+/* Gradient stat cards for home dashboard */
+.wr-stat-card {
+  background: linear-gradient(135deg, var(--bg3) 0%, var(--hover) 100%);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Empty state with icon */
+.wr-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.wr-empty-state .wr-empty-icon {
+  font-size: 48px;
+  opacity: 0.15;
+  margin-bottom: 12px;
+}
+
+.wr-empty-state .wr-empty-text {
+  font-size: 13px;
+  color: var(--text3);
+  line-height: 1.5;
+}
+
+/* Outline template cards */
+.wr-outline-tpl-btn {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 10px;
+  cursor: pointer;
+  color: var(--text2);
+}
+
+/* ===== 布局补丁：工具箱内 #page-music 依赖全局 .page(flex/height)，
+   聚创台 SPA 无该规则，这里补齐，并把播放器从 viewport-fixed 改为流内底部 ===== */
+#page-music{
+  display:flex; flex-direction:column; height:100%; min-height:0;
+  background:var(--bg); color:var(--text); position:relative; overflow:hidden;
+}
+.page-header{ flex-shrink:0; padding:14px 24px; border-bottom:1px solid var(--border); }
+.page-header h2{ font-size:16px; margin:0; color:var(--text); }
+.page-header .page-desc{ font-size:12px; color:var(--text3); margin:3px 0 0; }
+.music-body{ display:flex; flex-direction:column; flex:1; min-height:0; overflow:hidden; }
+/* 播放器：取消工具箱的固定定位（会盖住聚创台底栏），改为流内底部常驻 */
+.player-bar{
+  position:relative !important; left:auto !important; right:auto !important; bottom:auto !important;
+  flex-shrink:0;
+}

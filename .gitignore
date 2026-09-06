@@ -1,0 +1,70 @@
+# ============================================================
+# 聚创台 · 发布用 .gitignore
+# 原则：仅分发「可复用的工具/框架源码 + 配置模板」，
+#      绝不提交任何本机路径、个人资产、运行时数据、日志。
+# ============================================================
+
+# ---- 个人 / 运行时数据：绝不提交 ----
+# 真实配置与资产清单由使用者本地首次运行时生成（含本机目录、端口、token）
+data/config.json
+data/registry.json
+data/registry.json.bak*
+data/manual.json
+data/apps.json
+data/descriptions.json
+data/reading-room.json
+data/script-manager/
+data/writing/
+data/downloads/
+data/logs/
+data/*.bak
+# 保留随仓库分发的配置模板（以 .example.json 形式）
+!data/config.example.json
+!data/registry.example.json
+!data/.gitkeep
+
+# 本地服务产生的用户内容（阅读室下载等）
+services/*/downloads/
+
+# 内部开发 / 审计笔记（含个人路径，不随框架发布；仅发布资料库类文档）
+docs/E2E验收报告-2026-09-05.md
+docs/工具控制台UI重评估-2026-09-05.md
+docs/聚创台-工具台重构设计v1.md
+docs/聚创台启停与文件管理扩展方案.md
+docs/聚创台安全加固报告_2026-09-06.md
+docs/聚创台项目评估与安全审计报告_2026-09-06.md
+
+
+# ---- 日志 ----
+*.log
+error.log
+server-autostart.log
+
+# ---- 依赖 ----
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# ---- 本地环境 / 缓存 ----
+.workbuddy/
+.venv/
+.snapshot/
+.scratch/
+scratch/
+**/__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# ---- 历史备份（若对本地 .git 做过备份） ----
+.git.privbak/
+.gitbackup/
+
+# ---- OS / 编辑器 ----
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp

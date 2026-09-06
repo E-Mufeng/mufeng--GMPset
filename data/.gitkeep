@@ -1,0 +1,2 @@
+# 此文件用于保留 data/ 目录在仓库中的占位。
+# 真实运行时数据（config.json / registry.json / logs 等）由本机首次启动生成，已被 .gitignore 排除。

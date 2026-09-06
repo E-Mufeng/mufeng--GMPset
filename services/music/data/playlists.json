@@ -1,0 +1,53 @@
+{
+  "playlists": [
+    {
+      "id": "pl_1788543902990",
+      "name": "smoke测试歌单",
+      "description": "",
+      "songs": [],
+      "createdAt": "2026-09-04T17:45:02.990Z"
+    },
+    {
+      "id": "pl_1788544005030",
+      "name": "smoke测试歌单",
+      "description": "",
+      "songs": [],
+      "createdAt": "2026-09-04T17:46:45.030Z"
+    },
+    {
+      "id": "pl_1788544072607",
+      "name": "smoke测试歌单",
+      "description": "",
+      "songs": [],
+      "createdAt": "2026-09-04T17:47:52.607Z"
+    },
+    {
+      "id": "pl_1788544175637",
+      "name": "smoke测试歌单",
+      "description": "",
+      "songs": [],
+      "createdAt": "2026-09-04T17:49:35.637Z"
+    },
+    {
+      "id": "pl_1788544285190",
+      "name": "smoke测试歌单",
+      "description": "",
+      "songs": [],
+      "createdAt": "2026-09-04T17:51:25.190Z"
+    },
+    {
+      "id": "pl_1788544393890",
+      "name": "smoke测试歌单",
+      "description": "",
+      "songs": [],
+      "createdAt": "2026-09-04T17:53:13.890Z"
+    },
+    {
+      "id": "pl_1788544496106",
+      "name": "smoke测试歌单",
+      "description": "",
+      "songs": [],
+      "createdAt": "2026-09-04T17:54:56.106Z"
+    }
+  ]
+}

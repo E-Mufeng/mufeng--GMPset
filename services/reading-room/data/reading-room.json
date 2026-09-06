@@ -1,0 +1,146 @@
+{
+  "categories": [
+    {
+      "id": "da-a",
+      "name": "大A",
+      "icon": "📈",
+      "paths": [],
+      "fileTypes": [
+        ".md"
+      ],
+      "readerType": "text",
+      "links": [
+        {
+          "name": "东方财富网",
+          "url": "https://www.eastmoney.com/",
+          "desc": "综合财经门户"
+        },
+        {
+          "name": "雪球",
+          "url": "https://xueqiu.com/",
+          "desc": "投资者社区"
+        },
+        {
+          "name": "同花顺",
+          "url": "https://www.10jqka.com.cn/",
+          "desc": "实时行情"
+        },
+        {
+          "name": "巨潮资讯网",
+          "url": "http://www.cninfo.com.cn/",
+          "desc": "上市公司公告"
+        }
+      ],
+      "dailyScan": true
+    },
+    {
+      "id": "novels",
+      "name": "小说",
+      "icon": "📖",
+      "paths": [
+        "services/reading-room/downloads/novels"
+      ],
+      "fileTypes": [
+        ".txt"
+      ],
+      "readerType": "text",
+      "links": [
+        {
+          "name": "笔趣阁",
+          "url": "https://www.biquge.com/",
+          "desc": "全网小说免费阅读"
+        },
+        {
+          "name": "番茄小说",
+          "url": "https://fanqienovel.com/",
+          "desc": "正版免费"
+        },
+        {
+          "name": "起点中文网",
+          "url": "https://www.qidian.com/",
+          "desc": "原创小说平台"
+        }
+      ],
+      "dailyScan": true
+    },
+    {
+      "id": "ebooks",
+      "name": "PDF/电子书",
+      "icon": "📄",
+      "paths": [
+        "services/reading-room/downloads/ebooks"
+      ],
+      "fileTypes": [
+        ".pdf"
+      ],
+      "readerType": "pdf",
+      "links": [
+        {
+          "name": "安娜的档案",
+          "url": "https://zh.annas-archive.org/",
+          "desc": "开源数字图书馆"
+        },
+        {
+          "name": "鸠摩搜索",
+          "url": "https://www.jiumodiary.com/",
+          "desc": "电子书搜索"
+        },
+        {
+          "name": "识典古籍",
+          "url": "https://www.shidianguji.com/",
+          "desc": "古籍在线阅读"
+        }
+      ],
+      "dailyScan": true
+    },
+    {
+      "id": "documents",
+      "name": "Word/文字",
+      "icon": "📝",
+      "paths": [
+        "services/reading-room/downloads/documents"
+      ],
+      "fileTypes": [
+        ".docx",
+        ".md"
+      ],
+      "readerType": "word",
+      "links": [
+        {
+          "name": "百度文库",
+          "url": "https://wenku.baidu.com/",
+          "desc": "综合文档平台"
+        },
+        {
+          "name": "道客巴巴",
+          "url": "https://www.doc88.com/",
+          "desc": "专业文档分享"
+        },
+        {
+          "name": "Smallpdf",
+          "url": "https://smallpdf.com/cn",
+          "desc": "PDF转换/编辑"
+        }
+      ],
+      "dailyScan": true
+    }
+  ],
+  "files": [],
+  "lastScan": null,
+  "scanSchedule": "0 6 * * *",
+  "readProgress": {},
+  "bookshelf": [
+    {
+      "id": "book_1788541160677_sgc7g2",
+      "name": "聚创台示例小说_测试.txt",
+      "path": "services/reading-room/downloads/novels\\聚创台示例小说_测试.txt",
+      "author": "",
+      "cover": "",
+      "status": "reading",
+      "addedAt": "2026-09-04T16:59:20.677Z",
+      "lastReadAt": "2026-09-04T16:59:20.677Z",
+      "progress": 0
+    }
+  ],
+  "bookmarks": []
+}

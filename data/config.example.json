@@ -1,0 +1,112 @@
+{
+  "name": "聚创台",
+  "port": 8768,
+  "host": "127.0.0.1",
+  "accessToken": "",
+  "version": "0.8.6",
+  "assistant": {
+    "provider": "ollama",
+    "baseUrl": "http://127.0.0.1:11434",
+    "model": ""
+  },
+  "selfService": {
+    "enabled": true,
+    "name": "聚创台",
+    "nodePath": "node",
+    "entry": "server.js",
+    "logPath": "data/logs/server.log",
+    "startCommand": "start.bat",
+    "startup": {
+      "enabled": false,
+      "method": "startup-folder",
+      "linkName": "JuChuangTai.lnk"
+    }
+  },
+  "fileRoots": [],
+  "monitoredRoots": [],
+  "fileScanRoots": [],
+  "fileScanExts": [
+    "html", "htm", "exe", "msi", "py", "bat", "ps1", "ahk", "vbs", "cmd", "sh", "js", "jar", "lnk", "appref-ms", "url"
+  ],
+  "fileScanMaxDepth": 3,
+  "appScan": {
+    "keywords": [
+      "claude", "codex", "lobsterai", "workbuddy", "chatgpt", "ollama", "anythingllm",
+      "豆包", "cursor", "vscode", "gemini", "copilot", "kimi", "deepseek", "trae"
+    ],
+    "roots": [],
+    "maxDepth": 3,
+    "exclude": [
+      "node_modules", ".git", "updates", "vendor", "resources", "cache",
+      "Uninstall", "Repair", "Setup"
+    ]
+  },
+  "portScan": {
+    "knownServices": {
+      "3001": "AnythingLLM",
+      "8081": "工具箱",
+      "8765": "多 Agent 工作台",
+      "11434": "Ollama",
+      "18800": "OpenClaw Gateway",
+      "52562": "WorkBuddy 本地服务",
+      "8787": "free-API 本地代理"
+    },
+    "serviceStart": {}
+  },
+  "classification": {
+    "网页前端": ["html", "htm", "vue", "jsx", "tsx", "css", "scss"],
+    "数据处理": ["csv", "xlsx", "xls", "ipynb", "r", "sql", "parquet"],
+    "自动化脚本": ["bat", "ps1", "ahk", "vbs", "cmd", "sh"],
+    "源码脚本": ["py", "js", "ts", "go", "rs", "java", "c", "cpp", "cs", "rb"]
+  },
+  "scanner": {
+    "maxDepth": 6,
+    "excludeDirs": [
+      "node_modules", ".git", ".venv", "venv", "__pycache__", "dist", "build",
+      ".cache", "archive", ".workbuddy", "bin", "obj", "runtimes", "dependencies",
+      "lib", "libs", "site-packages", "include", "tcl", "tk", "libexec", "debug",
+      "test", "tests", "examples", "docs", "vendor", "third_party", "3rdparty", "packages"
+    ],
+    "projectMarkers": [
+      "package.json", "requirements.txt", "pyproject.toml", "go.mod", "main.py",
+      "app.py", "server.py", "index.js", "server.js", "app.js"
+    ],
+    "scriptExts": ["bat", "ps1", "ahk", "vbs", "cmd", "sh", "py", "js"]
+  },
+  "ui": {
+    "theme": "light",
+    "sidebarCollapsed": false
+  },
+  "toolbox": {
+    "enabled": true,
+    "baseUrl": "",
+    "startCmd": "",
+    "modules": [
+      { "id": "dashboard", "name": "总览仪表盘", "icon": "grid", "kind": "local", "renderer": "dashboard", "group": "端口服务", "desc": "系统状态与资产总览", "cmd": "services/dashboard/start-dashboard.bat", "cwd": "services/dashboard", "fused": true },
+      { "id": "sysmon", "name": "系统监控", "icon": "cpu", "kind": "local", "renderer": "sysmon", "group": "端口服务", "desc": "实时 CPU / 内存 / 磁盘负载", "cmd": "services/system-monitor/start-system-monitor.bat", "cwd": "services/system-monitor", "fused": true },
+      { "id": "music", "name": "音乐中心", "icon": "music", "kind": "local", "renderer": "music", "group": "端口服务", "desc": "本地音乐库播放与歌单管理", "cmd": "services/music/start-music.bat", "cwd": "services/music", "fused": true },
+      { "id": "files", "name": "文件处理", "icon": "file", "kind": "local", "renderer": "files", "group": "端口服务", "desc": "PDF / 图片 / 文本批量处理", "cmd": "services/files/start-files.bat", "cwd": "services/files", "fused": true },
+      { "id": "reading-room", "name": "阅览室", "icon": "book", "kind": "local", "renderer": "reading-room", "group": "端口服务", "desc": "电子书与资料阅读", "cmd": "services/reading-room/start-reading-room.bat", "cwd": "services/reading-room", "fused": true },
+      { "id": "writing", "name": "写作工作台", "icon": "pen", "kind": "local", "renderer": "writing", "group": "端口服务", "desc": "结构化写作与大纲", "cmd": "services/writing/start-writing.bat", "cwd": "services/writing", "fused": true },
+      { "id": "tools", "name": "工具集合", "icon": "tool", "kind": "local", "renderer": "tools", "group": "端口服务", "desc": "网络/文本/系统实用工具汇总", "cmd": "services/tools/start-tools.bat", "cwd": "services/tools", "fused": true },
+      { "id": "scripts", "name": "脚本管理", "icon": "code", "kind": "local", "renderer": "scripts", "group": "脚本", "desc": "本地脚本集中管理", "cmd": "services/scripts/start-scripts.bat", "cwd": "services/scripts", "fused": true },
+      { "id": "util-json", "name": "JSON 工具", "icon": "braces", "kind": "local", "renderer": "util-json", "group": "工具·文件", "desc": "JSON 格式化 / 压缩 / 校验" },
+      { "id": "util-base64", "name": "Base64 编解码", "icon": "code", "kind": "local", "renderer": "util-base64", "group": "工具·文件", "desc": "文本与 Base64 互转（UTF-8）" },
+      { "id": "util-timestamp", "name": "时间戳转换", "icon": "clock", "kind": "local", "renderer": "util-timestamp", "group": "工具·文件", "desc": "Unix 时间戳与日期互转" },
+      { "id": "util-diff", "name": "文本对比", "icon": "diff", "kind": "local", "renderer": "util-diff", "group": "工具·文件", "desc": "两文本逐行差异对比" }
+    ],
+    "scripts": []
+  },
+  "aiApps": [
+    { "id": "anythingllm", "name": "AnythingLLM 知识库", "icon": "brain", "group": "AI 工作台", "desc": "本地知识库对话", "url": "http://127.0.0.1:3001", "embed": true, "kind": "web" },
+    { "id": "multi-agent", "name": "多 Agent 工作台", "icon": "nodes", "group": "AI 工作台", "desc": "本地多 Agent 编排", "url": "http://127.0.0.1:8765", "embed": true, "kind": "web" },
+    { "id": "openclaw", "name": "OpenClaw Gateway", "icon": "gateway", "group": "AI 工作台", "desc": "Agent 网关", "url": "http://127.0.0.1:18800", "embed": true, "kind": "web" },
+    { "id": "free-api", "name": "free-API 代理", "icon": "key", "group": "AI 工作台", "desc": "免费模型聚合代理", "url": "http://127.0.0.1:8787", "embed": true, "kind": "web" },
+    { "id": "ollama", "name": "Ollama", "icon": "chip", "group": "本地模型", "desc": "本地大模型运行时", "url": "http://127.0.0.1:11434", "embed": false, "kind": "service", "launch": "" },
+    { "id": "doubao", "name": "豆包", "icon": "chat", "group": "桌面客户端", "desc": "字节豆包 PC 客户端", "url": "", "embed": false, "kind": "desktop" },
+    { "id": "codex", "name": "Codex", "icon": "terminal", "group": "桌面客户端", "desc": "OpenAI Codex 客户端", "url": "", "embed": false, "kind": "desktop" },
+    { "id": "workbuddy", "name": "WorkBuddy", "icon": "robot", "group": "桌面客户端", "desc": "WorkBuddy 桌面端", "url": "", "embed": false, "kind": "desktop" },
+    { "id": "claude", "name": "Claude", "icon": "spark", "group": "桌面客户端", "desc": "Anthropic Claude", "url": "", "embed": false, "kind": "desktop" },
+    { "id": "chatgpt", "name": "ChatGPT", "icon": "openai", "group": "桌面客户端", "desc": "OpenAI ChatGPT 桌面端", "url": "", "embed": false, "kind": "desktop" }
+  ]
+}
