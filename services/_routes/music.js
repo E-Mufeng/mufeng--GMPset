@@ -3,7 +3,7 @@ const path = require('path');
 const fs = require('fs');
 const http = require('http');
 const https = require('https');
-const { loadConfig, ensureDirs } = require('../_utils/config');
+const { loadConfig, ensureDirs, getMusicConfig } = require('../_utils/config');
 const router = express.Router();
 
 const config = loadConfig();
@@ -48,13 +48,16 @@ function httpGetBuffer(url) {
 }
 
 // ===== Tang API Helper (QQ music full playback) =====
-// Uses third-party proxy that handles authentication server-side
-const TANG_API = 'https://tang.api.s01s.cn/music_open_api.php';
+// Uses third-party proxy that handles authentication server-side.
+// 默认使用内置公共代理；可在「设置 → 内置工具 → 音乐中心」中替换为自备代理地址。
+const TANG_API_DEFAULT = 'https://tang.api.s01s.cn/music_open_api.php';
 
 function tangFetch(params) {
+    // 每次调用实时读取配置，使 UI 修改无需重启即生效
+    const base = (getMusicConfig().apiUrl || TANG_API_DEFAULT).replace(/\/+$/, '');
     const qs = Object.entries(params).map(([k,v]) => k+'='+encodeURIComponent(v)).join('&');
     return new Promise((resolve, reject) => {
-        https.get(TANG_API+'?'+qs, { timeout: 10000, headers: { 'User-Agent': 'Mozilla/5.0' } }, (res) => {
+        https.get(base + '?' + qs, { timeout: 10000, headers: { 'User-Agent': 'Mozilla/5.0' } }, (res) => {
             let d='';
             res.on('data',c=>d+=c);
             res.on('end',()=>{
@@ -79,7 +82,9 @@ async function createMeting(platform, cookie) {
     const Meting = await getMeting();
     const m = new Meting(platform);
     m.format(true);
-    if (cookie) m.cookie(cookie);
+    // 未显式传入时，使用「设置 → 内置工具 → 音乐中心」中配置的 Cookie（可选，用于提升音质/可用音源）
+    const c = cookie || getMusicConfig().cookie || '';
+    if (c) m.cookie(c);
     return m;
 }
 

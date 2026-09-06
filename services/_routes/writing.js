@@ -231,8 +231,8 @@ const PROMPTS = {
 };
 
 // ─── DeepSeek API 调用 ───
-const DEEPSEEK_API_KEY = config.DEEPSEEK_API_KEY;
-const DEEPSEEK_API = config.DEEPSEEK_API;
+// 密钥/接口/模型均实时从配置读取（data/config.json → 环境变量 → 默认值），
+// 不再在模块加载时缓存，使前端 UI 修改无需重启即生效。
 
 function getPromptByKey(key) {
     for (const cat of Object.values(PROMPTS)) {
@@ -332,12 +332,11 @@ function injectVariables(template, variables) {
 // ═══════════════════════════════════════════════
 async function callDeepSeek({ systemMsg, userMsg, modelVersion, persona, thinkingBudget, extraMessages }) {
     const isReasoner = modelVersion === 'thinker';
-    const apiUrl = isReasoner
-        ? 'https://api.deepseek.com/v1/chat/completions'
-        : 'https://api.deepseek.com/v1/chat/completions';
-    
+    const wc = config.getWritingConfig();
+    const apiUrl = wc.api || 'https://api.deepseek.com/v1/chat/completions';
+
     const body = {
-        model: isReasoner ? 'deepseek-reasoner' : 'deepseek-chat',
+        model: isReasoner ? 'deepseek-reasoner' : (wc.model || 'deepseek-chat'),
         messages: [
             { role: 'system', content: systemMsg },
             ...(extraMessages || []),
@@ -361,7 +360,7 @@ async function callDeepSeek({ systemMsg, userMsg, modelVersion, persona, thinkin
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+            'Authorization': 'Bearer ' + config.getWritingConfig().apiKey
         },
         body: JSON.stringify(body)
     });
@@ -380,7 +379,7 @@ async function callDeepSeek({ systemMsg, userMsg, modelVersion, persona, thinkin
         thinking = data.choices[0].message.reasoning_content;
     }
     
-    return { content, thinking, usage: data.usage, model: isReasoner ? 'deepseek-reasoner' : 'deepseek-chat' };
+    return { content, thinking, usage: data.usage, model: isReasoner ? 'deepseek-reasoner' : (wc.model || 'deepseek-chat') };
 }
 
 // ─── 世界观自动注入 ───
@@ -1586,12 +1585,13 @@ router.post('/beta-read/deep', async (req, res) => {
     
     try {
         const prompt = '你是一个专业的小说Beta读编辑。请分析以下章节内容，找出可能的逻辑矛盾、情节漏洞、角色行为不一致、时间线错误等问题。\n\n要求：\n1. 只列出确实存在的问题，不要编造\n2. 简洁，每条问题用一句话描述\n3. 标注问题所在的大致位置（第几句或场景）\n4. 格式：每行一个「问题类型: 描述」\n\n章节内容：\n' + content;
-        
-        const response = await fetch(config.DEEPSEEK_API, {
+
+        const wc = config.getWritingConfig();
+        const response = await fetch(wc.api, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + config.DEEPSEEK_API_KEY },
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + wc.apiKey },
             body: JSON.stringify({
-                model: 'deepseek-chat',
+                model: wc.model,
                 messages: [
                     { role: 'system', content: '你是一个专业的小说内容审稿人，擅长发现小说中的逻辑问题和剧情漏洞。直接给出问题列表，不要额外解释。' },
                     { role: 'user', content: prompt }
@@ -1867,9 +1867,10 @@ router.delete('/toolbox-history/all', (req, res) => {
 // GET /api/writing/balance — 检查DeepSeek API余额
 router.get('/balance', async (req, res) => {
     try {
-        const response = await fetch(config.DEEPSEEK_BALANCE_API, {
+        const wc = config.getWritingConfig();
+        const response = await fetch(wc.balanceApi, {
             method: 'GET',
-            headers: { 'Authorization': 'Bearer ' + config.DEEPSEEK_API_KEY }
+            headers: { 'Authorization': 'Bearer ' + wc.apiKey }
         });
         if (!response.ok) {
             // 如果API返回错误（比如key失效），返回余额0

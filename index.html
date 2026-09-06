@@ -1991,7 +1991,7 @@
       state.resources=data.resources||[];
       state.lastScan=data.lastScan;
     }catch(e){
-      state.error='无法连接本地服务（'+e.message+'）。请确认已启动后端：双击 D:\\聚创台\\start.bat，再访问 http://127.0.0.1:8768/';
+      state.error='无法连接本地服务（'+e.message+'）。请确认已启动后端：双击 <项目目录>\\start.bat，再访问 http://127.0.0.1:8768/';
       toast('加载失败：'+e.message, true);
     }
     state.loading=false; render(); updateLandingDecoCounts();
@@ -2404,6 +2404,28 @@
       const tr=rows.map(r=>`<div class="hk-row"><span>${r[0]}</span><kbd>${r[1]}</kbd></div>`).join('');
       return `<div class="set-group"><h4>快捷键</h4><p class="set-hint">聚创台壳层全局快捷键。工具内部快捷键由各工具自管，不在此列。</p><div class="hk-list">${tr}</div></div>`;
     }
+    if(tab==='tools'){
+      const bw = window._btWriting || {};
+      const bm = window._btMusic || {};
+      const ollamaLaunch = window._btOllamaLaunch || '';
+      return `<div class="set-group"><h4>写作工作台（AI 生成）</h4>
+        <p class="set-hint">接入 DeepSeek 等兼容 OpenAI 的接口，用于小说续写 / 大纲 / Beta 读。密钥仅存于本机 data/config.json（不进仓库）。</p>
+        <div class="set-row"><label>API Key</label><div class="set-control"><input type="password" id="btWKey" class="input" placeholder="sk-..." value="${esc(bw.apiKey||'')}" style="max-width:340px;"></div></div>
+        <div class="set-row"><label>接口地址</label><div class="set-control"><input type="text" id="btWApi" class="input" placeholder="https://api.deepseek.com/v1/chat/completions" value="${esc(bw.api||'')}" style="max-width:360px;"></div></div>
+        <div class="set-row"><label>余额接口</label><div class="set-control"><input type="text" id="btWBalance" class="input" placeholder="https://api.deepseek.com/user/balance" value="${esc(bw.balanceApi||'')}" style="max-width:360px;"></div></div>
+        <div class="set-row"><label>模型名</label><div class="set-control"><input type="text" id="btWModel" class="input" placeholder="deepseek-chat" value="${esc(bw.model||'')}" style="max-width:240px;"></div></div>
+      </div>
+      <div class="set-group"><h4>音乐中心</h4>
+        <p class="set-hint">默认使用内置公共音源代理（QQ / 酷狗 / 酷我 / 百度）。可自备代理地址，或填 VIP Cookie 提升可用音源与音质。</p>
+        <div class="set-row"><label>默认音源</label><div class="set-control"><select id="btMSource" class="select"><option value="tencent"${bm.source==='tencent'?' selected':''}>QQ音乐</option><option value="kugou"${bm.source==='kugou'?' selected':''}>酷狗音乐</option><option value="kuwo"${bm.source==='kuwo'?' selected':''}>酷我音乐</option><option value="baidu"${bm.source==='baidu'?' selected':''}>百度音乐</option></select></div></div>
+        <div class="set-row"><label>代理地址</label><div class="set-control"><input type="text" id="btMApi" class="input" placeholder="留空=内置默认" value="${esc(bm.apiUrl||'')}" style="max-width:360px;"></div></div>
+        <div class="set-row"><label>VIP Cookie</label><div class="set-control"><input type="password" id="btMCookie" class="input" placeholder="可选" value="${esc(bm.cookie||'')}" style="max-width:340px;"></div></div>
+      </div>
+      <div class="set-group"><h4>本地模型（Ollama）启动</h4>
+        <p class="set-hint">填写 Ollama 的本地启动脚本 / 可执行路径（如 D:\\ollama\\ollama-lazy-serve.bat）。留空则「启动」按钮提示未配置。不再写死本机路径。</p>
+        <div class="set-row"><label>启动命令</label><div class="set-control"><input type="text" id="btOllama" class="input" placeholder="如 D:\\ollama\\ollama-lazy-serve.bat" value="${esc(ollamaLaunch)}" style="max-width:380px;"></div></div>
+      </div>`;
+    }
     return `<div class="set-group"><h4>数据与缓存</h4>
       <div class="set-row"><label>清理缓存</label><div class="set-control"><button class="btn btn-ghost btn-sm" data-action="clearCache" type="button">清理缩略图 / 日志缓存</button></div></div>
       <div class="set-row"><label>配置</label><div class="set-control"><button class="btn btn-ghost btn-sm" data-action="exportConfig" type="button">导出设置</button><button class="btn btn-ghost btn-sm" data-action="importConfig" type="button">导入设置</button><input type="file" id="importFile" accept="application/json" hidden></div></div>
@@ -2435,6 +2457,12 @@
     window._cfgFRoots=(cfg.fileScanRoots||[]).join('\n');
     window._cfgSvc=Object.entries((cfg.portScan&&cfg.portScan.knownServices)||{}).map(([p,n])=>p+'='+n).join('\n');
     window._jctToken = (localStorage.getItem('jct_token')||'');
+    // 内置工具配置（写作 / 音乐 / Ollama 启动）
+    window._cfgFull = cfg;
+    window._btWriting = (cfg.builtinTools && cfg.builtinTools.writing) || {};
+    window._btMusic = (cfg.builtinTools && cfg.builtinTools.music) || {};
+    const _oapp = (cfg.aiApps||[]).find(a=>/ollama/i.test(a.id||'')||/ollama/i.test(a.name||''));
+    window._btOllamaLaunch = (_oapp && _oapp.launch) || ((cfg.portScan&&cfg.portScan.serviceStart&&cfg.portScan.serviceStart.Ollama)||'');
     state._settingsTab='appearance';
     const root=document.getElementById('modalRoot');
     root.innerHTML=`<div class="modal-mask" id="modalMask"><div class="modal settings-modal" role="dialog" aria-modal="true">
@@ -2444,6 +2472,7 @@
           <button class="stab active" data-stab="appearance">外观</button>
           <button class="stab" data-stab="workbench">工作台</button>
           <button class="stab" data-stab="hotkeys">快捷键</button>
+          <button class="stab" data-stab="tools">内置工具</button>
           <button class="stab" data-stab="data">数据</button>
         </div>
         <div class="settings-content" id="settingsContent">${settingsTabHTML('appearance')}</div>
@@ -2666,7 +2695,23 @@
       const i=t.indexOf('=');
       if(i>0){ const p=t.slice(0,i).trim(); const n=t.slice(i+1).trim(); if(p && /^\d+$/.test(p)) svc[p]=n; }
     });
-    const payload={ monitoredRoots:roots, fileScanRoots:froots, portScan:{ knownServices:svc } };
+    // 内置工具配置
+    const btWKey=(document.getElementById('btWKey')||{}).value.trim();
+    const btWApi=(document.getElementById('btWApi')||{}).value.trim();
+    const btWBalance=(document.getElementById('btWBalance')||{}).value.trim();
+    const btWModel=(document.getElementById('btWModel')||{}).value.trim();
+    const btMSource=(document.getElementById('btMSource')||{}).value;
+    const btMApi=(document.getElementById('btMApi')||{}).value.trim();
+    const btMCookie=(document.getElementById('btMCookie')||{}).value.trim();
+    const btOllama=(document.getElementById('btOllama')||{}).value.trim();
+    const builtinTools={
+      writing:{ apiKey:btWKey, api:btWApi||'https://api.deepseek.com/v1/chat/completions', balanceApi:btWBalance||'https://api.deepseek.com/user/balance', model:btWModel||'deepseek-chat' },
+      music:{ apiUrl:btMApi, source:btMSource||'tencent', cookie:btMCookie }
+    };
+    // 保留既有 portScan.serviceStart（避免保存时清空 Ollama / free-API 等启动命令），并写入 Ollama 启动命令
+    const basePortScan = (window._cfgFull && window._cfgFull.portScan) || {};
+    const portScan = { knownServices: svc, serviceStart: Object.assign({}, basePortScan.serviceStart||{}, { Ollama: btOllama }) };
+    const payload={ monitoredRoots:roots, fileScanRoots:froots, portScan, builtinTools };
     persistSettings();
     const saveBtn=document.getElementById('modalSave');
     saveBtn.classList.add('is-loading'); saveBtn.disabled=true;
@@ -2722,7 +2767,7 @@
   }
   async function doSelfStop(){
     toggleSelfMenu(false);
-    if(!confirm('确定停止聚创台服务？停止后需双击 D:\\聚创台\\start.bat 或运行 restart_helper.bat 才能恢复。')) return;
+    if(!confirm('确定停止聚创台服务？停止后需双击 <项目目录>\\start.bat 或运行 restart_helper.bat 才能恢复。')) return;
     try{
       await api('/api/self/stop','POST');
       toast('已发送停止指令，服务即将关闭');
@@ -4124,7 +4169,7 @@
   rotateBgIfNeeded();
   startTick();
   if(location.protocol==='file:'){
-    state.error='本工作台需通过本地服务运行：请先双击 D:\\聚创台\\start.bat 启动后端，再用浏览器打开 http://127.0.0.1:8768/（直接双击 HTML 文件会因无法连接后端 API 而加载失败）。';
+    state.error='本工作台需通过本地服务运行：请先双击 <项目目录>\\start.bat 启动后端，再用浏览器打开 http://127.0.0.1:8768/（直接双击 HTML 文件会因无法连接后端 API 而加载失败）。';
     render();
     return;
   }

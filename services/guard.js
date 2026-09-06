@@ -9,7 +9,7 @@ const https = require('https');
 const BASE = path.join(__dirname, '..');
 const STATE_FILE = path.join(BASE, 'data', 'guard_state.json');
 const USAGE_FILE = path.join(BASE, 'data', 'guard-usage.json');
-const BALANCE_API = 'https://api.deepseek.com/user/balance';
+const { getWritingConfig } = require('./_utils/config');
 
 // 阈值（可环境变量覆盖）
 const MIN_BALANCE = parseFloat(process.env.DS_MIN_BALANCE || '1.0');
@@ -49,13 +49,15 @@ function countMessagesTokens(messages) {
 
 function getBalance(force) {
   return new Promise((resolve) => {
-    const key = process.env.LOBSTER_APIKEY_DEEPSEEK || process.env.DEEPSEEK_API_KEY || '';
+    const wc = getWritingConfig();
+    const key = process.env.LOBSTER_APIKEY_DEEPSEEK || process.env.DEEPSEEK_API_KEY || wc.apiKey || '';
     if (!key) return resolve({ balance: null, ok: false });
     const state = loadState();
     const now = Date.now() / 1000;
     if (!force && state.balance != null && (now - (state.balance_cached_at || 0)) < BALANCE_TTL) {
       return resolve({ balance: parseFloat(state.balance), ok: true });
     }
+    const BALANCE_API = wc.balanceApi || 'https://api.deepseek.com/user/balance';
     const req = https.get(BALANCE_API, {
       headers: { Authorization: 'Bearer ' + key },
       timeout: 10000

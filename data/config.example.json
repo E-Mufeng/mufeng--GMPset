@@ -3,11 +3,24 @@
   "port": 8768,
   "host": "127.0.0.1",
   "accessToken": "",
-  "version": "0.8.7",
+  "version": "0.8.8",
   "assistant": {
     "provider": "ollama",
     "baseUrl": "http://127.0.0.1:11434",
     "model": ""
+  },
+  "builtinTools": {
+    "writing": {
+      "apiKey": "",
+      "api": "https://api.deepseek.com/v1/chat/completions",
+      "balanceApi": "https://api.deepseek.com/user/balance",
+      "model": "deepseek-chat"
+    },
+    "music": {
+      "apiUrl": "",
+      "source": "tencent",
+      "cookie": ""
+    }
   },
   "selfService": {
     "enabled": true,

@@ -4,6 +4,30 @@
 
 ---
 
+## [0.8.8] - 内置工具 API 配置进 UI + 移除源码层硬编码密钥
+
+- **目标**：阿豪 3 点反馈：① README 补充截图和界面说明；② 音乐中心、写作工作台等内置工具应有自己的 API 配置入口；③ 全面检阅项目，消除类似「源码中写死密钥/个人路径」的小细节问题。
+- **安全修复（P0）**：`services/config.js` 原先硬编码了 DeepSeek API Key（`sk-...`），已随源码进入仓库历史。本轮重写为兼容壳，密钥统一从 `data/config.json` 的 `builtinTools.writing.apiKey` 或环境变量 `DEEPSEEK_API_KEY` 读取；源码层不再出现任何真实密钥。
+  - 已把运行态 key 迁移到本地 `data/config.json`（已被 `.gitignore` 排除，不进仓库），保证现有功能不中断。
+  - 前端保存设置后，写作服务会实时读取最新配置，无需重启。
+- **移除硬编码 Ollama 路径**：`server.js:303` 原兜底写死 `D:\\ollama\\ollama-lazy-serve.bat`，已改为从 `data/config.json` 的 `aiApps[].launch` 或 `portScan.serviceStart.Ollama` 读取；未配置时返回 null，不再误导他人。
+- **配置结构扩展**：
+  - `services/_utils/config.js` 新增 `getWritingConfig()` / `getMusicConfig()`，每次调用实时读取 `data/config.json`。
+  - `server.js normalizeConfig()` 自动补齐 `builtinTools.writing` 和 `builtinTools.music` 默认空结构。
+  - `data/config.json` 与 `data/config.example.json` 增加 `builtinTools` 字段，example 中密钥为空。
+- **前端「内置工具」设置页**：`index.html` 设置面板新增「内置工具」tab，提供：
+  - 写作工作台：DeepSeek API Key / 接口地址 / 余额接口 / 模型名。
+  - 音乐中心：默认音源（QQ音乐/酷狗/酷我/百度）/ 代理地址 / VIP Cookie。
+  - Ollama 启动命令：填写本地启动脚本路径。
+  - 保存时自动写回 `/api/config`，并保留既有 `portScan.serviceStart` 中的其它启动命令（修复原先保存设置会清空 Ollama/free-API 启动命令的潜在问题）。
+- **Music 路由可配置化**：`services/_routes/music.js` 的 Tang API 地址、默认音源、Cookie 改为从 `getMusicConfig()` 读取；原硬编码公共代理仅作为默认值。
+- **Writing 路由实时读取配置**：`services/_routes/writing.js` 移除模块级 `DEEPSEEK_API_KEY` / `DEEPSEEK_API` 常量，统一调用 `config.getWritingConfig()`；核心 `callDeepSeek` 与余额检查均使用配置中的接口/密钥/模型。
+- **成本守卫同步读取配置**：`services/guard.js` 的 `getBalance()` 改为优先读 `builtinTools.writing.apiKey`（再回退环境变量），余额接口也从配置读取。
+- **README 与截图**：新增 `docs/screenshots/` 5 张界面截图；README 增加「界面速览」章节和「内置工具 API 配置」章节，说明在哪里填、怎么填、默认值。
+- **新增文档**：`docs/内置工具API配置说明.md` 详细介绍写作、音乐、Ollama 三处配置，以及安全与隐私注意事项。
+- **版本升 0.8.8**：`data/config.json` / `data/config.example.json` 版本号同步更新。
+- **验证**：`node --check server.js` / `node --check services/_routes/writing.js` / `node --check services/_routes/music.js` / `node --check services/_utils/config.js` 通过；`git grep` 全仓无残留硬编码 key；新设置页可保存 builtinTools 到 `data/config.json`。
+
 ## [0.8.7] - 发布前安全加固：助手 SSRF 边界守卫
 
 - **目标**：上传 GitHub 前补齐边界约束。原 `/api/assistant/chat` 接受请求体里的 `baseUrl`，在 `accessToken` 为空（默认本机开放）时存在 SSRF 隐患（可被用作打内网/云元数据的跳板）。

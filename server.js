@@ -53,6 +53,12 @@ function normalizeConfig(cfg) {
     if (ensure(cfg.assistant, 'baseUrl', 'http://127.0.0.1:11434')) fixed.push('assistant.baseUrl');
     if (ensure(cfg.assistant, 'model', '')) fixed.push('assistant.model');
   }
+  // 内置工具（写作 / 音乐）的可配置 API：缺失时补空结构，避免前端读取 undefined
+  if (ensure(cfg, 'builtinTools', {})) fixed.push('builtinTools');
+  if (cfg.builtinTools) {
+    if (ensure(cfg.builtinTools, 'writing', {})) fixed.push('builtinTools.writing');
+    if (ensure(cfg.builtinTools, 'music', {})) fixed.push('builtinTools.music');
+  }
   if (fixed.length) console.warn('[config] 缺失字段已补默认值: ' + fixed.join(', '));
   return cfg;
 }
@@ -295,12 +301,18 @@ async function stopPort(port) {
   });
 }
 
-// 离线服务的启动命令：先取 config 显式配置，再按名称兜底（如 Ollama）
+// 离线服务的启动命令：先取 config 显式配置，再按名称 / 端口兜底
+// 注意：不再写死任何本机路径（如 D:\ollama\...），统一由用户在 config.json
+// 的 portScan.serviceStart 或 aiApps[].launch 中自行配置。
 function serviceStartCmd(name, port) {
   const map = (CONFIG.portScan && CONFIG.portScan.serviceStart) || {};
   if (map[name]) return map[name];
   if (map[String(port)]) return map[String(port)];
-  if (/ollama/i.test(name || '')) return 'D:\\ollama\\ollama-lazy-serve.bat';
+  // Ollama 等：从已登记的 AI 应用里取 launch 命令；未配置则返回 null（展示「未配置启动命令」）
+  if (/ollama/i.test(name || '') || String(port) === '11434') {
+    const app = (CONFIG.aiApps || []).find(a => /ollama/i.test(a.id || '') || /ollama/i.test(a.name || ''));
+    if (app && app.launch) return app.launch;
+  }
   return null;
 }
 
